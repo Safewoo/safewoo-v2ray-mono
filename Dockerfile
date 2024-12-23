@@ -7,7 +7,7 @@ COPY ./v2ray /opt/v2ray
 RUN chmod +x /opt/v2ray/v2ray
 
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh 
-RUN chmod +x /opt/safewoo/entrypoint.sh
+# RUN chmod +x /opt/safewoo/entrypoint.sh
 
 ENV DOMAIN=${DOMAIN} 
 ENV URL_PATH=${URL_PATH}
