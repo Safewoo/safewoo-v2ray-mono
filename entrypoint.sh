@@ -58,8 +58,8 @@ command=/opt/v2ray/v2ray run -c /opt/v2ray/config.json
 autostart=true
 autorestart=true
 startretries=10
-stdout_logfile=NONE
-stderr_logfile=NONE
+stdout_logfile=/var/log/v2ray.log
+stderr_logfile=/var/log/error.v2ray.log
 
 [program:nginx]
 process_name=%(program_name)s
@@ -67,8 +67,8 @@ command=/usr/sbin/nginx -g "daemon off;"
 autostart=true
 autorestart=true
 startretries=10
-stdout_logfile=NONE
-stderr_logfile=NONE
+stdout_logfile=/var/log/nginx.log
+stderr_logfile=/var/log/error.nginx.log
 EOF
     echo "Supervisor is configured"
 }
@@ -131,7 +131,7 @@ make_ss_inbound(){
       "streamSettings": {
         "network": "ws",
         "wsSettings": {
-          "path": "/$URL_PATH",
+          "path": "$URL_PATH",
           "headers": {
             "Host": "$DOMAIN"
           }
