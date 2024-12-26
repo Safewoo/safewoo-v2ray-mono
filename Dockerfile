@@ -1,6 +1,6 @@
 FROM debian:stable-slim
 
-RUN apt-get update && apt-get install -y bash supervisor nginx openssl curl \
+RUN apt-get update && apt-get install -y bash supervisor nginx openssl curl gettext jq \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./v2ray /opt/v2ray
