@@ -131,7 +131,7 @@ make_ss_inbound(){
       "protocol": "shadowsocks",
       "settings": {
         "password": "$SECRET",
-        "method": "aes-128-gcm",
+        "method": "aes-256-gcm",
         "level": 0,
         "network": "tcp",
         "ivCheck": true,
@@ -466,7 +466,7 @@ main(){
 
     # if DISABLE_ONLINE_CONFIG is not set, print the online config
     if [ -z "$DISABLE_ONLINE_CONFIG" ]; then
-        echoinfo "See client configuration online: https://safewoo.com/vpn/config/$CONFIG_UUID"
+        echoinfo "See client configuration online: https://safewoo.com/config/$CONFIG_UUID"
     fi
 
     echoinfo "*********************************************************************************"
