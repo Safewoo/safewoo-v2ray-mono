@@ -46,10 +46,6 @@ docker build -t safewoo-v2ray-mono .
 - **Flexibility**: Supports multiple protocols and can be easily customized to fit different use cases.
 - **Reliability**: Uses Supervisor to manage and monitor the V2Ray and Nginx processes, ensuring high availability.
 
-## Installation
-
-To install SafeWoo V2Ray Mono, clone the repository and build the Docker image:
-
 ## Usage
 To start using SafeWoo V2Ray Mono, run the following command:
 
@@ -70,26 +66,25 @@ docker logs safewoo-v2ray-mono
 Assuming you have a certificate pair in `/your-cert-dir/example.com.key` and `/your-cert-dir/example.com.crt`
 
 ```bash
-
 docker run -e DOMAIN=example.com \
     -e SECRET=secret_of_inbound \
     -e PROTOCOL=${vmess|trojan|ss} \
-    -e URL_PATH=/a_path_no_one_knows
-    -v /your-cert-to-a-dir:/opt/safewoo
-    --name safewoo-v2ray-mono
+    -e URL_PATH=/a_path_no_one_knows \
+    -v /your-cert-dir:/opt/safewoo \
+    --name safewoo-v2ray-mono \
     -p 443:443 -d ghcr.io/safewoo/safewoo-v2ray-mono:release
 ```
 
 ### Use self-signed certificate
 
-If there is no certificate directory mount to /opt/safewoo, a self-signed certificate will issued. The container issued a self-signed certificate, which is a security risk and may be blocked by firewalls. Safewoo WebShell offers a solution by creating a secure reverse proxy with a certificate from a trusted Certificate Authority (CA) and a real domain name. This significantly enhances security, improves accessibility, and helps bypass censorship.
+If there is no certificate directory mounted to /opt/safewoo, a self-signed certificate will be issued. The container issued a self-signed certificate, which is a security risk and may be blocked by firewalls. Safewoo WebShell offers a solution by creating a secure reverse proxy with a certificate from a trusted Certificate Authority (CA) and a real domain name. This significantly enhances security, improves accessibility, and helps bypass censorship.
 
 ```bash
 docker run -e DOMAIN=example.com \
     -e SECRET=secret_of_inbound \
     -e PROTOCOL=${vmess|trojan|ss} \
-    -e URL_PATH=/a_path_no_one_knows
-    --name safewoo-v2ray-mono
+    -e URL_PATH=/a_path_no_one_knows \
+    --name safewoo-v2ray-mono \
     -p 443:443 -d ghcr.io/safewoo/safewoo-v2ray-mono:release
 ```
 
