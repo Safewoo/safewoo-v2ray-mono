@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM ghcr.io/safewoo/safewoo-v2ray-mono:release
 
 RUN apt-get update && apt-get install -y bash supervisor nginx openssl curl gettext jq \
     && rm -rf /var/lib/apt/lists/*

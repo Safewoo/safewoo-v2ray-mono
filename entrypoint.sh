@@ -82,6 +82,42 @@ EOF
     echo "Supervisor is configured"
 }
 
+make_inbound(){
+
+    INBOUND_SETTINGS=$(cat /tmp/_v2ray_inbound_settings)
+
+    cat > /tmp/_v2ray_inbound << EOF
+    {
+      "port": 1080,
+      "listen": "0.0.0.0",
+      "protocol": "$PROTOCOL",
+      "settings": $INBOUND_SETTINGS,
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "$URL_PATH",
+          "headers": {
+            "Host": "$DOMAIN"
+          }
+        }
+      },
+      "tag": "safewoo-inbound",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "allocate": {
+        "strategy": "always",
+        "refresh": 5,
+        "concurrency": 3
+      }
+    }
+EOF
+}
+
 make_vmess_inbound(){
     cat > /tmp/_v2ray_inbound << EOF
     {
@@ -205,6 +241,22 @@ make_trojan_inbound(){
 EOF
 }
 
+make_vless_inbound(){
+
+    cat > /tmp/_v2ray_inbound_settings << EOF
+    {
+      "decryption": "none",
+      "clients": [
+        {
+          "id": "$SECRET"
+        }
+      ]
+    }
+EOF
+
+    make_inbound
+}
+
 make_v2ray_conf(){
 
     # make inbound config based on PROTOCOL
@@ -217,6 +269,9 @@ make_v2ray_conf(){
         ;;
         trojan)
             make_trojan_inbound
+        ;;
+        vless)
+            make_vless_inbound
         ;;
         *)
             echo "PROTOCOL is not supported"
