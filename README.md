@@ -16,6 +16,13 @@ SafeWoo V2Ray Mono is a Docker-based deployment solution for setting up a V2Ray 
 
 Safewoo.com uses it in production.
 
+The easiest way to use it.
+
+```bash
+curl -fsSL https://safewoo.com/v2ray.sh | sudo bash -s -- -p vless
+```
+
+
 ## Installation
 
 To install SafeWoo V2Ray Mono, pull it from github
