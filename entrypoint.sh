@@ -25,6 +25,12 @@ get_real_ip(){
 }
 
 config_nginx(){
+
+    if [ "$_NO_TLS" == "1" ]; then
+        config_nginx_without_tls
+        return
+    fi
+
     cat > /etc/nginx/conf.d/v2fly.conf << EOF
 server {
     server_name $DOMAIN;
@@ -55,6 +61,32 @@ EOF
     /usr/sbin/nginx -t || (echo "nginx test failed"; exit 1)
     echo "Nginx is configured"
 }
+
+config_nginx_without_tls(){
+  cat > /etc/nginx/conf.d/v2fly.conf << EOF
+server {
+  server_name $DOMAIN;
+  listen 8848;
+
+  access_log /var/log/nginx/access.v2ray.log;
+  error_log /var/log/nginx/error.v2ray.log;
+
+  location $URL_PATH {
+          proxy_pass http://127.0.0.1:1080;
+          proxy_set_header Upgrade \$http_upgrade;
+          proxy_set_header Connection "Upgrade";
+          proxy_set_header Host \$host;
+          proxy_set_header X-Real-Ip \$remote_addr;
+          proxy_set_header Cache-Control "no-cache";
+  }
+
+  location / {
+          return 403;
+  } 
+}
+EOF
+}
+
 
 conf_supervisor(){
     cat > /etc/supervisor/supervisord.conf << EOF
@@ -364,7 +396,7 @@ EOF
 }
 
 make_online_client_config(){
-    # POST $DOMAIN, $URL_PATH, $PROTOCOL, $SECRET, $CERTIFICATE, $PRIVATE_KEY to $SW_API
+    # POST $DOMAIN, $URL_PATH, $PROTOCOL, $SECRET, $CERTIFICATE, $PRIVATE_KEY to $SW_API, _NO_TLS
 
     if [ "$DISABLE_ONLINE_CONFIG" == "1" ]; then
         echo "Online config is disabled"
@@ -477,16 +509,18 @@ main(){
     URL_PATH=${URL_PATH}
     PROTOCOL=${PROTOCOL}
     SECRET=${SECRET}
+    _NO_TLS=${_NO_TLS}
     SW_API=${SW_API}
     DISABLE_ONLINE_CONFIG=${DISABLE_ONLINE_CONFIG}
+    
 
     # if not DOMAIN, make a radom sub of safewoo.com
     if [ -z "$DOMAIN" ]; then
         SUB=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
         ZONE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 4 | head -n 1)
         DOMAIN="$SUB.$ZONE.com"
-	SSL_CRT_PATH=/opt/safewoo/$DOMAIN.crt
-	SSL_KEY_PATH=/opt/safewoo/$DOMAIN.key
+	      SSL_CRT_PATH=/opt/safewoo/$DOMAIN.crt
+	      SSL_KEY_PATH=/opt/safewoo/$DOMAIN.key
     fi
 
     # default PROTOCOL is vmess
