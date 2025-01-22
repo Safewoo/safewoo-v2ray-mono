@@ -340,18 +340,24 @@ make_v2ray_conf(){
   "policy": {
     "levels": {
       "0": {
-        "uplinkOnly": 0,
-        "downlinkOnly": 0
+          "handshake": 4,
+          "connIdle": 300,
+          "uplinkOnly": 2,
+          "downlinkOnly": 5,
+          "statsUserUplink": true,
+          "statsUserDownlink": true,
+          "bufferSize": 10240
       }
     },
     "system": {
-      "statsInboundUplink": false,
-      "statsInboundDownlink": false,
-      "statsOutboundUplink": false,
-      "statsOutboundDownlink": false
+      "statsInboundUplink": true,
+      "statsInboundDownlink": true,
+      "statsOutboundUplink": true,
+      "statsOutboundDownlink": true
     }
   },
-  "other": {}
+  "other": {},
+  "stats": {}
 }
 EOF
 }
